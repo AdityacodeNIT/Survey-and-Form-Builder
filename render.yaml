@@ -6,8 +6,8 @@ services:
     region: oregon
     plan: free
     rootDir: Backend
-    buildCommand: npm install && npm run build
-    startCommand: node dist/index.js
+    buildCommand: npm ci && npm run build
+    startCommand: bash start.sh
     envVars:
       - key: NODE_ENV
         value: production

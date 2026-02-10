@@ -3,7 +3,8 @@
 A modern, full-stack web application that enables users to create, manage, and analyze surveys and forms with AI-powered question generation. Built with React, Node.js, and integrated with Groq/Claude AI for intelligent form creation.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-ISC-green.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
 
 ## ✨ Features
 

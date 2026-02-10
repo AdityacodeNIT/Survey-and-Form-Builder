@@ -41,6 +41,56 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-slate-400 rounded-full hover:bg-slate-500;
   }
+
+  /* Smooth Scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  /* Animation for alerts */
+  @keyframes slide-down {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+
+  /* Override react-grid-layout spacing */
+  .react-grid-layout {
+    margin: 0 !important;
+  }
+
+  .react-grid-item {
+    margin-bottom: 8px !important;
+  }
+
+  /* Specific overrides for field grid */
+  .field-grid-container .react-grid-layout {
+    position: relative !important;
+  }
+
+  .field-grid-container .react-grid-item {
+    transition: all 200ms ease !important;
+    transition-property: left, top !important;
+  }
+
+  .field-grid-container .react-grid-item.react-grid-placeholder {
+    background: rgb(148 163 184 / 0.2) !important;
+    opacity: 0.5 !important;
+    transition-duration: 100ms !important;
+    z-index: 2 !important;
+    border-radius: 0.5rem !important;
+  }
 }
 
 @layer components {

@@ -36,7 +36,7 @@ A modern, full-stack web application that enables users to create, manage, and a
 - **Argon2** - Password hashing
 - **Winston** - Logging
 - **Groq SDK** - AI integration (free tier)
-- **Anthropic SDK** - Claude AI integration (optional)
+- **Anthropic SDK** - Claude AI integration (added functionality but do not added fully to avoid the issues)
 
 ## 📋 Prerequisites
 

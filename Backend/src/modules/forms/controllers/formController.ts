@@ -4,12 +4,13 @@ import { ApiError, ApiResponse, asyncHandler } from '../../../utils/index.js';
 import { nanoid } from 'nanoid';
 
 // Extend Request to include user from auth middleware
-
 interface AuthRequest extends Request {
   user?: {
     userId: string;
     email: string;
   };
+  body: any;
+  params: any;
 }
 
 // New Form Creation

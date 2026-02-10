@@ -31,6 +31,23 @@ app.use(express.urlencoded({ extended: true }));
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Root endpoint
+app.get('/', (_req: express.Request, res: express.Response) => {
+  res.status(200).json({
+    message: 'Survey and Form Builder API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      forms: '/api/forms',
+      ai: '/api/ai',
+      upload: '/api/upload',
+      publicForms: '/api/public/forms/:shareableUrl'
+    }
+  });
+});
+
 // Health check endpoint
 app.get('/health', (_req: express.Request, res: express.Response) => {
   res.status(200).json({

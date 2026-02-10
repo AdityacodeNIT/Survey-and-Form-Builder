@@ -4,13 +4,16 @@ import { authenticate } from '../../auth/middleware/authMiddleware.js';
 
 const router = Router();
 
-// POST /api/forms/:id/responses - Submit a response to a form (PUBLIC - no auth required)
+// POST /api/forms/:id/responses 
+
 router.post('/:id/responses', submitResponse);
 
-// GET /api/forms/:id/responses - Get all responses for a form (PROTECTED - requires auth)
+// GET /api/forms/:id/responses 
+
 router.get('/:id/responses', authenticate, getResponses);
 
-// GET /api/forms/:id/analytics - Get analytics for a form (PROTECTED - requires auth)
+// GET /api/forms/:id/analytics 
+
 router.get('/:id/analytics', authenticate, getAnalytics);
 
 export default router;

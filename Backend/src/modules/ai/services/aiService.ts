@@ -1,28 +1,33 @@
-// ============================================================================
+
 // AI PROVIDER CONFIGURATION
-// ============================================================================
-// Switch between 'anthropic' and 'groq' by changing AI_PROVIDER in .env
-// Default: 'groq' (free tier available)
-// ============================================================================
+// Switch providers by setting AI_PROVIDER in your .env file.
+// Example:
+// AI_PROVIDER=groq
+// AI_PROVIDER=anthropic
+// If nothing is set, we default to Groq to avoid paid surprises 
 
 import Anthropic from '@anthropic-ai/sdk';
 import Groq from 'groq-sdk';
 import { ApiError } from '../../../utils/apiError.js';
 import { logger } from '../../../utils/logger.js';
 
-// Determine which AI provider to use (default to Groq)
+// Determine which AI provider to use 
 const AI_PROVIDER = process.env.AI_PROVIDER || 'groq';
 
+// we are using groq becuase it is having free tier requests 
+
 // ============================================================================
-// ANTHROPIC CLIENT (Uncomment when you have credits)
+// ANTHROPIC CLIENT 
 // ============================================================================
+
 const anthropic = new Anthropic({
   apiKey: process.env.CLAUDE_API_KEY || 'dummy-key',
 });
 
 // ============================================================================
-// GROQ CLIENT (Free tier available)
+// GROQ CLIENT for free tier
 // ============================================================================
+
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
@@ -42,9 +47,8 @@ export interface AISuggestion {
   reasoning?: string;
 }
 
-/**
- * Build prompt for AI to generate form field suggestions
- */
+// prompting 
+
 function buildPrompt(purpose: string): string {
   return `You are a form design expert. Based on the following form purpose, suggest relevant form fields that would help collect the necessary information.
 
@@ -85,9 +89,8 @@ Example format:
 ]`;
 }
 
-/**
- * Parse AI response and validate structure
- */
+//Parse AI response parsing and validation of the  structure
+ 
 function parseResponse(response: string): AISuggestion[] {
   try {
     // Remove markdown code blocks if present
@@ -104,7 +107,8 @@ function parseResponse(response: string): AISuggestion[] {
       throw new Error('Response is not an array');
     }
 
-    // Validate and transform each suggestion
+    // Validation and transformation of  each suggestion
+
     const suggestions: AISuggestion[] = parsed.map((item: any, index: number) => {
       if (!item.fieldType || !item.label) {
         throw new Error(`Suggestion ${index} missing required fields`);
@@ -135,12 +139,7 @@ function parseResponse(response: string): AISuggestion[] {
   }
 }
 
-// ============================================================================
-// ANTHROPIC IMPLEMENTATION
-// ============================================================================
-/**
- * Generate form field suggestions using Claude API (Anthropic)
- */
+
 async function generateSuggestionsWithAnthropic(purpose: string, userId: string): Promise<AISuggestion[]> {
   logger.info('Requesting AI suggestions from Claude API (Anthropic)', { purpose, userId });
 
@@ -156,6 +155,7 @@ async function generateSuggestionsWithAnthropic(purpose: string, userId: string)
   });
 
   // Extract text content from the response
+
   const textContent = message.content.find((block) => block.type === 'text');
   if (!textContent || textContent.type !== 'text') {
     throw new Error('No text content in Claude response');
@@ -164,12 +164,6 @@ async function generateSuggestionsWithAnthropic(purpose: string, userId: string)
   return parseResponse(textContent.text);
 }
 
-// ============================================================================
-// GROQ IMPLEMENTATION
-// ============================================================================
-/**
- * Generate form field suggestions using Groq API
- */
 async function generateSuggestionsWithGroq(purpose: string, userId: string): Promise<AISuggestion[]> {
   logger.info('Requesting AI suggestions from Groq API', { purpose, userId });
 
@@ -193,13 +187,6 @@ async function generateSuggestionsWithGroq(purpose: string, userId: string): Pro
   return parseResponse(responseText);
 }
 
-// ============================================================================
-// MAIN FUNCTION - Uses configured AI provider
-// ============================================================================
-/**
- * Generate form field suggestions using the configured AI provider
- * Set AI_PROVIDER in .env to 'anthropic' or 'groq' (default: 'groq')
- */
 export async function generateSuggestions(purpose: string, userId: string): Promise<AISuggestion[]> {
   if (!purpose || purpose.trim().length === 0) {
     throw new ApiError(400, 'Form purpose is required');
@@ -217,7 +204,6 @@ export async function generateSuggestions(purpose: string, userId: string): Prom
   try {
     let suggestions: AISuggestion[];
 
-    // Use the configured AI provider
     if (AI_PROVIDER === 'anthropic') {
       suggestions = await generateSuggestionsWithAnthropic(purpose, userId);
     } else if (AI_PROVIDER === 'groq') {
@@ -247,7 +233,7 @@ export async function generateSuggestions(purpose: string, userId: string): Prom
       userId 
     });
     
-    // Handle specific API errors
+    
     if (error.status === 401) {
       throw new ApiError(500, `Invalid ${AI_PROVIDER} API key`);
     } else if (error.status === 429) {

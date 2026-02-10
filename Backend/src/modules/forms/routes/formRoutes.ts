@@ -16,6 +16,7 @@ const router = Router();
 router.use(authenticate);
 
 // Form CRUD routes
+
 router.post('/', createForm);
 router.get('/', listForms);
 router.get('/:id', getForm);
@@ -23,6 +24,7 @@ router.put('/:id', updateForm);
 router.delete('/:id', deleteForm);
 
 // Publish/unpublish routes
+
 router.post('/:id/publish', publishForm);
 router.post('/:id/unpublish', unpublishForm);
 

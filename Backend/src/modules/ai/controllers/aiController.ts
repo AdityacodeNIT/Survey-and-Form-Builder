@@ -4,10 +4,9 @@ import { ApiResponse } from '../../../utils/apiResponse.js';
 import { ApiError } from '../../../utils/apiError.js';
 import { generateSuggestions } from '../services/aiService.js';
 
-/**
- * POST /api/ai/suggestions
- * Get AI-generated form field suggestions based on form purpose
- */
+// POST /api/ai/suggestions
+ // Get AI-generated form field suggestions based on form purpose
+ 
 export const getSuggestions = asyncHandler(async (req: Request, res: Response) => {
   const { purpose } = req.body;
 

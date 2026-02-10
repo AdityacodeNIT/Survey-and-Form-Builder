@@ -3,10 +3,9 @@ import { Response } from '../models/Response.js';
 import { Form } from '../../forms/models/Form.js';
 import { ApiError, ApiResponse, asyncHandler } from '../../../utils/index.js';
 
-/**
- * Submit a response to a form
- * POST /api/forms/:id/responses
- */
+
+ // Submit a response to a form
+
 export const submitResponse = asyncHandler(async (req: Request, res: ExpressResponse) => {
   const { id } = req.params;
   const { responseData } = req.body;
@@ -84,10 +83,9 @@ export const getResponses = asyncHandler(async (req: Request, res: ExpressRespon
   return ApiResponse.success(res, formattedResponses, 'Responses retrieved successfully');
 });
 
-/**
- * Get analytics for a form
- * GET /api/forms/:id/analytics
- */
+
+ // Get analytics for a form
+
 export const getAnalytics = asyncHandler(async (req: Request, res: ExpressResponse) => {
   const { id } = req.params;
 

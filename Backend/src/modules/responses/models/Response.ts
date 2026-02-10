@@ -25,7 +25,4 @@ const ResponseSchema = new Schema<IResponse>({
   },
 });
 
-// Index for efficient queries
-ResponseSchema.index({ formId: 1, submittedAt: -1 });
-
 export const Response = model<IResponse>('Response', ResponseSchema);

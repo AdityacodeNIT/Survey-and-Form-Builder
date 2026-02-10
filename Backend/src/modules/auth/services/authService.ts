@@ -25,9 +25,8 @@ export interface AuthResponse {
   token: string;
 }
 
-/**
- * Register a new user
- */
+// Register
+
 export const register = async (input: RegisterInput): Promise<AuthResponse> => {
   const { email, password, name } = input;
 
@@ -55,6 +54,7 @@ export const register = async (input: RegisterInput): Promise<AuthResponse> => {
   logger.info(`New user registered: ${user.email}`);
 
   // Generate JWT token
+
   const token = generateToken(user);
 
   return {
@@ -67,9 +67,8 @@ export const register = async (input: RegisterInput): Promise<AuthResponse> => {
   };
 };
 
-/**
- * Login user
- */
+// Login 
+
 export const login = async (input: LoginInput): Promise<AuthResponse> => {
   const { email, password } = input;
 
@@ -100,9 +99,9 @@ export const login = async (input: LoginInput): Promise<AuthResponse> => {
   };
 };
 
-/**
- * Generate JWT token for user
- */
+
+// jwt 
+
 export const generateToken = (user: IUser): string => {
   const payload = {
     userId: user._id.toString(),
@@ -116,9 +115,9 @@ export const generateToken = (user: IUser): string => {
   return token;
 };
 
-/**
- * Verify JWT token and return decoded payload
- */
+
+ // Verify JWT token
+
 export const verifyToken = (token: string): { userId: string; email: string } => {
   try {
     const decoded = jwt.verify(token, config.jwtSecret) as {

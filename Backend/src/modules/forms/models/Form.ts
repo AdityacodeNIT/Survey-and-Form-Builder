@@ -117,8 +117,4 @@ const FormSchema = new Schema<IForm>(
   }
 );
 
-// Indexes for efficient queries
-FormSchema.index({ userId: 1, createdAt: -1 });
-FormSchema.index({ shareableUrl: 1 });
-
 export const Form = model<IForm>('Form', FormSchema);

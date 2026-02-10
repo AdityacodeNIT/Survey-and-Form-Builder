@@ -2,10 +2,9 @@ import { Request, Response } from 'express';
 import { ApiError, ApiResponse, asyncHandler } from '../../utils/index.js';
 import { logger } from '../../utils/logger.js';
 
-/**
- * Upload a file to local storage
- * POST /api/upload
- */
+// Upload a file to local storage
+// POST /api/upload
+
 export const uploadFile = asyncHandler(async (req: Request, res: Response) => {
   if (!req.file) {
     throw new ApiError(400, 'No file uploaded');
@@ -15,7 +14,7 @@ export const uploadFile = asyncHandler(async (req: Request, res: Response) => {
     // File is already saved by multer to uploads/ folder
     const fileUrl = `/uploads/${req.file.filename}`;
 
-    logger.info('File uploaded successfully', { 
+    logger.info('File uploaded successfully', {
       filename: req.file.filename,
       originalName: req.file.originalname,
       size: req.file.size,

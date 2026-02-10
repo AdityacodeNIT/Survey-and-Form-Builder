@@ -4,6 +4,7 @@ import { ApiError, ApiResponse, asyncHandler } from '../../../utils/index.js';
 import { nanoid } from 'nanoid';
 
 // Extend Request to include user from auth middleware
+
 interface AuthRequest extends Request {
   user?: {
     userId: string;
@@ -11,10 +12,8 @@ interface AuthRequest extends Request {
   };
 }
 
-/**
- * Create a new form
- * POST /api/forms
- */
+// New Form Creation
+
 export const createForm = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { title, description, purpose, fields } = req.body;
 
@@ -39,10 +38,8 @@ export const createForm = asyncHandler(async (req: AuthRequest, res: Response) =
   return ApiResponse.created(res, form, 'Form created successfully');
 });
 
-/**
- * Get a specific form by ID
- * GET /api/forms/:id
- */
+// Get Forms By ID
+
 export const getForm = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
@@ -61,10 +58,8 @@ export const getForm = asyncHandler(async (req: AuthRequest, res: Response) => {
   return ApiResponse.success(res, form, 'Form retrieved successfully');
 });
 
-/**
- * Update a form
- * PUT /api/forms/:id
- */
+// Update form 
+
 export const updateForm = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   const { title, description, purpose, fields } = req.body;
@@ -92,10 +87,8 @@ export const updateForm = asyncHandler(async (req: AuthRequest, res: Response) =
   return ApiResponse.success(res, form, 'Form updated successfully');
 });
 
-/**
- * Delete a form
- * DELETE /api/forms/:id
- */
+// Delete a form 
+
 export const deleteForm = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
@@ -116,10 +109,8 @@ export const deleteForm = asyncHandler(async (req: AuthRequest, res: Response) =
   return ApiResponse.success(res, null, 'Form deleted successfully');
 });
 
-/**
- * List all forms for the authenticated user
- * GET /api/forms
- */
+// lIST ALL the forms
+
 export const listForms = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = req.user?.userId;
 
@@ -133,10 +124,8 @@ export const listForms = asyncHandler(async (req: AuthRequest, res: Response) =>
   return ApiResponse.success(res, forms, 'Forms retrieved successfully');
 });
 
-/**
- * Publish a form
- * POST /api/forms/:id/publish
- */
+// Publish a form
+
 export const publishForm = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
@@ -163,10 +152,8 @@ export const publishForm = asyncHandler(async (req: AuthRequest, res: Response) 
   return ApiResponse.success(res, form, 'Form published successfully');
 });
 
-/**
- * Unpublish a form
- * POST /api/forms/:id/unpublish
- */
+// uNPUBLISH A FORM 
+
 export const unpublishForm = asyncHandler(async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
@@ -188,10 +175,8 @@ export const unpublishForm = asyncHandler(async (req: AuthRequest, res: Response
   return ApiResponse.success(res, form, 'Form unpublished successfully');
 });
 
-/**
- * Get a public form by shareable URL (no authentication required)
- * GET /api/public/forms/:shareableUrl
- */
+// get url form 
+
 export const getPublicForm = asyncHandler(async (req: Request, res: Response) => {
   const { shareableUrl } = req.params;
 

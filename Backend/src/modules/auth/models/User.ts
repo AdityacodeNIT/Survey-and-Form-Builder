@@ -33,7 +33,5 @@ const UserSchema = new Schema<IUser>({
   },
 });
 
-// Index for faster email lookups
-UserSchema.index({ email: 1 });
 
 export const User = model<IUser>('User', UserSchema);

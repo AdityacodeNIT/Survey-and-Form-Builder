@@ -20,11 +20,7 @@ interface EnvConfig {
  * Validate required environment variables
  */
 const validateEnv = (): void => {
-  const required = [
-    'MONGODB_URI',
-    'JWT_SECRET',
-  ];
-
+  const required = ['MONGODB_URI', 'JWT_SECRET'];
   const missing = required.filter((key) => !process.env[key]);
 
   if (missing.length > 0) {
@@ -34,13 +30,11 @@ const validateEnv = (): void => {
 
   // Check AI provider configuration
   const aiProvider = process.env.AI_PROVIDER || 'groq';
-  if (aiProvider === 'anthropic' && !process.env.CLAUDE_API_KEY) {
-    logger.error('CLAUDE_API_KEY is required when AI_PROVIDER is set to anthropic');
-    throw new Error('CLAUDE_API_KEY is required when AI_PROVIDER is set to anthropic');
-  }
   if (aiProvider === 'groq' && !process.env.GROQ_API_KEY) {
-    logger.error('GROQ_API_KEY is required when AI_PROVIDER is set to groq (default)');
-    throw new Error('GROQ_API_KEY is required when AI_PROVIDER is set to groq');
+    logger.warn('GROQ_API_KEY not set. AI features will not work.');
+  }
+  if (aiProvider === 'anthropic' && !process.env.CLAUDE_API_KEY) {
+    logger.warn('CLAUDE_API_KEY not set. AI features will not work.');
   }
 };
 

@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "From_Builder",
-  "license": "ISC",
+  "license": "MIT",
   "author": "Aditya Srivastav",
   "type": "module",
   "main": "dist/index.js",

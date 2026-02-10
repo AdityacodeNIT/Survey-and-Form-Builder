@@ -38,6 +38,19 @@ const AnalyticsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const responsesPerPage = 10;
+
+  // Calculate pagination
+  const indexOfLastResponse = currentPage * responsesPerPage;
+  const indexOfFirstResponse = indexOfLastResponse - responsesPerPage;
+  const currentResponses = responses.slice(indexOfFirstResponse, indexOfLastResponse);
+  const totalPages = Math.ceil(responses.length / responsesPerPage);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     if (id) {
@@ -189,13 +202,13 @@ const AnalyticsPage = () => {
         </div>
 
         {/* Stats Card */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-lg p-8 mb-6 text-white">
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg shadow-lg px-4 p-3 mb-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-purple-100 text-sm font-medium mb-2">Total Responses</p>
               <p className="text-5xl font-bold">{analytics.responseCount}</p>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-full p-6">
+            <div className="bg-white bg-opacity-20 rounded-full p-4">
               <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -207,7 +220,7 @@ const AnalyticsPage = () => {
         {analytics.fieldStatistics.length > 0 && (
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Question Insights</h2>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3 md:grid-cols-2">
               {analytics.fieldStatistics.map(field => (
                 <div key={field.fieldId} className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="font-semibold text-lg text-gray-900 mb-1">{field.label}</h3>
@@ -267,60 +280,120 @@ const AnalyticsPage = () => {
               <p className="text-gray-400 text-sm mt-2">Responses will appear here once users submit the form</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {responses.map((response, index) => (
-                <div key={response._id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-purple-100 text-purple-700 rounded-full w-10 h-10 flex items-center justify-center font-bold">
-                        {index + 1}
+            <>
+              <div className="space-y-4">
+                {currentResponses.map((response, index) => {
+                  const actualIndex = indexOfFirstResponse + index;
+                  return (
+                    <div key={response._id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-purple-100 text-purple-700 rounded-full w-10 h-10 flex items-center justify-center font-bold">
+                            {actualIndex + 1}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">Response #{actualIndex + 1}</p>
+                            <p className="text-sm text-gray-500">{formatDate(response.submittedAt)}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">Response #{index + 1}</p>
-                        <p className="text-sm text-gray-500">{formatDate(response.submittedAt)}</p>
+
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {Object.entries(response.responseData).map(([fieldId, value]) => {
+                          const field = analytics.fieldStatistics.find(f => f.fieldId === fieldId);
+                          const label = field?.label || fieldId;
+                          const isFile = isFileUrl(value);
+
+                          return (
+                            <div key={fieldId} className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-sm font-medium text-gray-600 mb-2">{label}</p>
+                              {isFile ? (
+                                <a
+                                  href={getFullUrl(String(value))}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                                  View File
+                                </a>
+                              ) : Array.isArray(value) ? (
+                                <div className="flex flex-wrap gap-2">
+                                  {value.map((v, i) => (
+                                    <span key={i} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                                      {String(v)}
+                                    </span>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="text-gray-900 font-medium">{String(value)}</p>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
+                  );
+                })}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-6">
+                  <div className="text-sm text-gray-600">
+                    Showing {indexOfFirstResponse + 1} to {Math.min(indexOfLastResponse, responses.length)} of {responses.length} responses
                   </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {Object.entries(response.responseData).map(([fieldId, value]) => {
-                      const field = analytics.fieldStatistics.find(f => f.fieldId === fieldId);
-                      const label = field?.label || fieldId;
-                      const isFile = isFileUrl(value);
-
-                      return (
-                        <div key={fieldId} className="bg-gray-50 rounded-lg p-4">
-                          <p className="text-sm font-medium text-gray-600 mb-2">{label}</p>
-                          {isFile ? (
-                            <a
-                              href={getFullUrl(String(value))}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Previous
+                    </button>
+                    
+                    <div className="flex items-center gap-1">
+                      {[...Array(totalPages)].map((_, i) => {
+                        const page = i + 1;
+                        // Show first page, last page, current page, and pages around current
+                        if (
+                          page === 1 ||
+                          page === totalPages ||
+                          (page >= currentPage - 1 && page <= currentPage + 1)
+                        ) {
+                          return (
+                            <button
+                              key={page}
+                              onClick={() => goToPage(page)}
+                              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                currentPage === page
+                                  ? 'bg-slate-600 text-white'
+                                  : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                              }`}
                             >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                              </svg>
-                              View File
-                            </a>
-                          ) : Array.isArray(value) ? (
-                            <div className="flex flex-wrap gap-2">
-                              {value.map((v, i) => (
-                                <span key={i} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
-                                  {String(v)}
-                                </span>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-gray-900 font-medium">{String(value)}</p>
-                          )}
-                        </div>
-                      );
-                    })}
+                              {page}
+                            </button>
+                          );
+                        } else if (page === currentPage - 2 || page === currentPage + 2) {
+                          return <span key={page} className="px-2 text-gray-400">...</span>;
+                        }
+                        return null;
+                      })}
+                    </div>
+
+                    <button
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Next
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       </div>

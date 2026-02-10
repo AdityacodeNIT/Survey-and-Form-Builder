@@ -12,8 +12,11 @@ const startServer = async () => {
     await connectDatabase();
 
     // Start Express server
-    const server = app.listen(config.port, () => {
-      logger.info(`🚀 Server running on port ${config.port} in ${config.nodeEnv} mode`);
+    const PORT = config.port;
+    const HOST = '0.0.0.0'; // Bind to all network interfaces for Render
+    
+    const server = app.listen(PORT, HOST, () => {
+      logger.info(`🚀 Server running on ${HOST}:${PORT} in ${config.nodeEnv} mode`);
     });
 
     // Graceful shutdown

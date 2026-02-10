@@ -92,7 +92,7 @@ export default function FormBuilderPage() {
         setSuccess("");
         return;
       }
-      if ((field.type === 'select' || field.type === 'radio' || field.type === 'checkbox') && (!field.options || field.options.length === 0 || field.options.every(opt => !opt.trim()))) {
+      if ((field.type === 'select' || field.type === 'radio' || field.type === 'checkbox') && (!field.options || field.options.length === 0 || field.options.every((opt: string) => !opt.trim()))) {
         setError(`Field "${field.label}" must have at least one valid option`);
         setSuccess("");
         return;
@@ -357,10 +357,10 @@ export default function FormBuilderPage() {
                         onClick={() => {
                           const newField: Field = {
                             id: `field_${Date.now()}`,
-                            type: s.fieldType,
-                            label: s.label,
+                            type: s.fieldType || 'text',
+                            label: s.label || '',
                             placeholder: s.placeholder,
-                            required: s.required,
+                            required: s.required || false,
                             options: s.options,
                             order: fields.length,
                           };
@@ -615,7 +615,7 @@ export default function FormBuilderPage() {
                     Options
                   </label>
                   <div className="space-y-2">
-                    {selectedField.options?.map((option, index) => (
+                    {selectedField.options?.map((option: string, index: number) => (
                       <div key={index} className="flex gap-2">
                         <input
                           className="flex-1 border rounded-lg px-3 py-2"
@@ -630,7 +630,7 @@ export default function FormBuilderPage() {
                         <button
                           type="button"
                           onClick={() => {
-                            const newOptions = selectedField.options?.filter((_, i) => i !== index);
+                            const newOptions = selectedField.options?.filter((_: string, i: number) => i !== index);
                             updateField(selectedField.id, { options: newOptions });
                           }}
                           className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"

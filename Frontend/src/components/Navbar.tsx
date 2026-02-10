@@ -10,7 +10,7 @@ export default function Navbar() {
     navigate("/");
   };
 
-  const navLinkClass = ({ isActive }) =>
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
       isActive
         ? "text-blue-600 font-semibold"

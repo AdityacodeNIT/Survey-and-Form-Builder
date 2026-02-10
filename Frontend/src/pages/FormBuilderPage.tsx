@@ -73,6 +73,9 @@ export default function FormBuilderPage() {
   };
 
   const saveForm = async () => {
+    // Prevent double submission
+    if (isLoading) return;
+    
     // Validate first without clearing messages
     if (!title.trim()) {
       setError("Form title is required");
@@ -114,18 +117,17 @@ export default function FormBuilderPage() {
 
       if (isEditMode && id) {
         await api.put(`/forms/${id}`, payload);
-        setSuccess("Form updated successfully! Redirecting...");
-        // Redirect to dashboard after 1.5 seconds
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1500);
+        setSuccess("Form updated successfully!");
+        setIsLoading(false);
+        navigate('/dashboard');
       } else {
-        const res = await api.post("/forms", payload);
-        navigate(`/forms/${res.data.data._id}/edit`);
+        await api.post("/forms", payload);
+        setSuccess("Form created successfully!");
+        setIsLoading(false);
+        navigate('/dashboard');
       }
     } catch (e: any) {
       setError(e.response?.data?.message || "Failed to save form");
-    } finally {
       setIsLoading(false);
     }
   };

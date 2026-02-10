@@ -115,21 +115,38 @@ const PublicFormPage = () => {
     }
 
     setValidationErrors(errors);
+    
+    // Scroll to first error if any
+    if (Object.keys(errors).length > 0) {
+      const firstErrorField = Object.keys(errors)[0];
+      const element = document.getElementById(`field-${firstErrorField}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+    
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    e.stopPropagation();
+    
+    if (submitting) return; // Prevent double submission
+    
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       setSubmitting(true);
+      setError(null);
       await api.post(`/forms/${form?._id}/responses`, { responseData: formData });
       setSuccess(true);
       setFormData({});
       setUploadedFiles({});
-    } catch {
-      setError('Submission failed');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Submission failed. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -145,6 +162,7 @@ const PublicFormPage = () => {
     return (
       <div
         key={field.id}
+        id={`field-${field.id}`}
         onFocus={() => setActiveField(field.id)}
         onBlur={() => setActiveField(null)}
         className={`bg-white border-2 rounded-xl p-6 transition-all duration-300 shadow-sm hover:shadow-md
@@ -440,7 +458,7 @@ const PublicFormPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header Card */}
-        <div className="relative bg-white rounded-2xl p-8 mb-4 shadow-xl border-4 border-indigo-100 overflow-hidden">
+        <div className="relative bg-white border-b-4 border-purple-300 rounded-2xl p-8 mb-4 shadow-xl border-4 border-indigo-100 overflow-hidden">
           {/* Decorative ring elements */}
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-indigo-200 to-purple-200 rounded-full opacity-20 blur-3xl"></div>
           <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-tr from-purple-200 to-indigo-200 rounded-full opacity-20 blur-3xl"></div>
@@ -469,7 +487,7 @@ const PublicFormPage = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-2">
           {form?.fields
             .sort((a: Field, b: Field) => a.order - b.order)
             .map(renderField)}

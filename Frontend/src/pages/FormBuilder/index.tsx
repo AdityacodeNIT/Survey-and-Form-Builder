@@ -113,8 +113,8 @@ export default function FormBuilderPage() {
 
         <Alerts error={error} success={success} />
 
-        <div className="max-w-7xl mx-auto px-6 py-6 pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
             <div className="lg:col-span-2 space-y-2">
               <FormDetails
                 title={title}
@@ -150,11 +150,11 @@ export default function FormBuilderPage() {
 
               {/* Save Button at Bottom */}
               {fields.length > 0 && (
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                  <div className="flex items-center justify-between">
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Ready to save?</h3>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-900">Ready to save?</h3>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1">
                         {fields.length} field{fields.length !== 1 ? 's' : ''} added • {title || 'Untitled Form'}
                       </p>
                       <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
@@ -164,7 +164,7 @@ export default function FormBuilderPage() {
                         Draft auto-saved
                       </p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                       <button
                         type="button"
                         onClick={() => {
@@ -173,14 +173,14 @@ export default function FormBuilderPage() {
                             window.location.reload();
                           }
                         }}
-                        className="px-4 py-2 text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors"
+                        className="px-4 py-2 text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors text-center"
                       >
                         Clear Draft
                       </button>
                       <button
                         type="button"
                         onClick={() => navigate('/dashboard')}
-                        className="px-6 py-3 text-slate-600 hover:text-slate-800 font-medium transition-colors"
+                        className="px-4 sm:px-6 py-2 sm:py-3 text-slate-600 hover:text-slate-800 font-medium transition-colors text-center"
                       >
                         Cancel
                       </button>
@@ -188,7 +188,7 @@ export default function FormBuilderPage() {
                         type="button"
                         onClick={saveForm}
                         disabled={isLoading}
-                        className="bg-slate-600 hover:bg-slate-700 text-white px-8 py-3 rounded-lg font-medium disabled:opacity-50 transition-colors shadow-sm flex items-center gap-2"
+                        className="bg-slate-600 hover:bg-slate-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center gap-2"
                       >
                         {isLoading ? (
                           <>

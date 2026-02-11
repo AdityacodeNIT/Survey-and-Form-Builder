@@ -1,4 +1,4 @@
-# 🚀 AI-Generated Survey and Form Builder
+#  AI-Generated Survey and Form Builder
 
 A modern, full-stack web application that enables users to create, manage, and analyze surveys and forms with AI-powered question generation. Built with React, Node.js, and integrated with Groq/Claude AI for intelligent form creation.
 
@@ -49,7 +49,7 @@ Before you begin, ensure you have the following installed:
 - **Groq API Key** - Free tier available at [Groq Console](https://console.groq.com/)
 - **Claude API Key** (Optional) - From [Anthropic](https://www.anthropic.com/)
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Clone the Repository
 
@@ -340,7 +340,7 @@ This test validates:
    - Verify response count is correct
    - Check field statistics
 
-## 🏗️ Building for Production
+##  Building for Production
 
 ### Backend
 
@@ -368,7 +368,7 @@ npm run preview
 
 The production build will be in the `Frontend/dist` directory.
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -398,7 +398,7 @@ The production build will be in the `Frontend/dist` directory.
 - Login again to get a new token
 - Verify `JWT_SECRET` is set in backend `.env`
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -408,7 +408,7 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
+##  License
 
 This project is licensed under the ISC License.
 

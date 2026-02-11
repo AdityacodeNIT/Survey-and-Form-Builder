@@ -14,17 +14,19 @@ const DashboardPage = () => {
 
   useEffect(() => {
     loadForms();
-  }, []);
+  }, []); // Empty dependency array is fine here
 
   const loadForms = async () => {
     try {
       setIsLoading(true);
       setError(null);
       const response = await api.get<ApiResponse<Form[]>>('/forms');
-      setForms(Array.isArray(response.data.data) ? response.data.data : []);
+      const formsData = Array.isArray(response.data.data) ? response.data.data : [];
+      setForms(formsData);
     } catch (err: any) {
+      console.error('Failed to load forms:', err);
       setError(err.response?.data?.message || 'Failed to load forms');
-      setForms([]); // Set to empty array on error
+      setForms([]);
     } finally {
       setIsLoading(false);
     }
@@ -45,9 +47,12 @@ const DashboardPage = () => {
 
     try {
       await api.delete(`/forms/${formId}`);
-      await loadForms();
+      // Optimistic update - remove from UI immediately
+      setForms(forms.filter(f => f._id !== formId));
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to delete form');
+      // Reload if delete failed
+      loadForms();
     }
   };
 
@@ -56,15 +61,27 @@ const DashboardPage = () => {
   };
 
   const handleTogglePublish = async (form: Form) => {
+    const isPublishing = form.publishStatus !== 'published';
+    
+    // Optimistic update
+    setForms(forms.map(f => 
+      f._id === form._id 
+        ? { ...f, publishStatus: isPublishing ? 'published' : 'draft' } 
+        : f
+    ));
+
     try {
-      if (form.publishStatus === 'published') {
-        await api.post(`/forms/${form._id}/unpublish`);
-      } else {
+      if (isPublishing) {
         await api.post(`/forms/${form._id}/publish`);
+      } else {
+        await api.post(`/forms/${form._id}/unpublish`);
       }
+      // Reload to get the shareable URL
       await loadForms();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to update publish status');
+      // Revert on error
+      loadForms();
     }
   };
 

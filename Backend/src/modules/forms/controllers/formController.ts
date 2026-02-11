@@ -119,8 +119,11 @@ export const listForms = asyncHandler(async (req: AuthRequest, res: Response) =>
     throw new ApiError(401, 'User not authenticated');
   }
 
+  // Only select fields needed for dashboard display
   const forms = await Form.find({ userId })
-    .sort({ createdAt: -1 });
+    .select('title description publishStatus shareableUrl createdAt fields')
+    .sort({ createdAt: -1 })
+    .lean(); // Use lean() for faster queries
 
   return ApiResponse.success(res, forms, 'Forms retrieved successfully');
 });

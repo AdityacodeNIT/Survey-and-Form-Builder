@@ -15,8 +15,19 @@ interface Props {
 
 export default function FieldGrid({ fields, selectedFieldId, setSelectedFieldId, removeField, setFields }: Props) {
   const gridRef = useRef<HTMLDivElement>(null);
-  const [gridWidth, setGridWidth] = useState(1200); // Set default width
+  const [gridWidth, setGridWidth] = useState(1200);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -25,12 +36,8 @@ export default function FieldGrid({ fields, selectedFieldId, setSelectedFieldId,
       }
     };
 
-    // Update immediately
     updateWidth();
-    
-    // Also update after a short delay to ensure DOM is ready
     const timer = setTimeout(updateWidth, 100);
-    
     window.addEventListener("resize", updateWidth);
 
     return () => {
@@ -39,7 +46,6 @@ export default function FieldGrid({ fields, selectedFieldId, setSelectedFieldId,
     };
   }, []);
 
-  // Recalculate width when fields change
   useEffect(() => {
     if (gridRef.current && fields.length > 0) {
       const timer = setTimeout(() => {
@@ -65,10 +71,23 @@ export default function FieldGrid({ fields, selectedFieldId, setSelectedFieldId,
     
     const fieldType = e.dataTransfer.getData('fieldType');
     if (fieldType) {
-      // Trigger the parent's addField function through a custom event
       const event = new CustomEvent('addFieldFromDrop', { detail: { fieldType } });
       window.dispatchEvent(event);
     }
+  };
+
+  const moveFieldUp = (index: number) => {
+    if (index === 0) return;
+    const newFields = [...fields];
+    [newFields[index - 1], newFields[index]] = [newFields[index], newFields[index - 1]];
+    setFields(newFields);
+  };
+
+  const moveFieldDown = (index: number) => {
+    if (index === fields.length - 1) return;
+    const newFields = [...fields];
+    [newFields[index], newFields[index + 1]] = [newFields[index + 1], newFields[index]];
+    setFields(newFields);
   };
 
   if (fields.length === 0) {
@@ -90,12 +109,73 @@ export default function FieldGrid({ fields, selectedFieldId, setSelectedFieldId,
           <p className={`font-semibold text-lg transition-colors ${isDraggingOver ? 'text-slate-700' : 'text-gray-500'}`}>
             {isDraggingOver ? 'Release to add field' : 'Drop a field here'}
           </p>
-          <p className="text-sm text-gray-400 mt-2">Drag a field type from above and drop it here</p>
+          <p className="text-sm text-gray-400 mt-2">{isMobile ? 'Click a field type above to add' : 'Drag a field type from above and drop it here'}</p>
         </div>
       </div>
     );
   }
 
+  // Mobile view with up/down buttons
+  if (isMobile) {
+    return (
+      <div 
+        ref={gridRef} 
+        className="w-full space-y-2"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        {fields.map((f, i) => (
+          <div key={f.id} className="flex items-stretch gap-2">
+            {/* Up/Down buttons on the left */}
+            <div className="flex flex-col gap-1 flex-shrink-0">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  moveFieldUp(i);
+                }}
+                disabled={i === 0}
+                className="p-1.5 bg-slate-600 text-white rounded disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-700 transition-colors"
+                aria-label="Move up"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  moveFieldDown(i);
+                }}
+                disabled={i === fields.length - 1}
+                className="p-1.5 bg-slate-600 text-white rounded disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-700 transition-colors"
+                aria-label="Move down"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Field card */}
+            <div className="flex-1 min-w-0">
+              <FieldCard
+                field={f}
+                index={i}
+                isSelected={selectedFieldId === f.id}
+                onSelect={() => setSelectedFieldId(f.id)}
+                onRemove={() => removeField(f.id)}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // Desktop view with drag and drop
   return (
     <div 
       ref={gridRef} 

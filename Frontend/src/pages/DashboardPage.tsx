@@ -225,12 +225,12 @@ const DashboardPage = () => {
                     <p className="text-xs font-medium text-gray-700 mb-2">Public Link:</p>
                     {form.shareableUrl ? (
                       <>
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-2 md:gap-1 mb-2">
                           <input
                             type="text"
                             value={`${window.location.origin}/f/${form.shareableUrl}`}
                             readOnly
-                            className="flex-1 text-xs px-2 py-1 bg-white border border-gray-300 rounded"
+                            className="flex-1 text-xs px-0 md:px-2 py-1 bg-white border border-gray-300 rounded"
                           />
                           <button
                             onClick={() => copyShareableLink(form.shareableUrl!)}

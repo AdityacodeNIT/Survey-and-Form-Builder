@@ -221,11 +221,12 @@ const DashboardPage = () => {
                 </div>
 
                 {form.publishStatus === 'published' && (
-                  <div className="mb-4 p-3 bg-slate-50 rounded border border-slate-200">
+                  <div className="mb-4 p-1 bg-slate-50 rounded border border-slate-200">
                     <p className="text-xs font-medium text-gray-700 mb-2">Public Link:</p>
+              
                     {form.shareableUrl ? (
                       <>
-                        <div className="flex items-center gap-2 md:gap-1 mb-2">
+                        <div className="flex items-center gap-1 md:gap-2 mb-2">
                           <input
                             type="text"
                             value={`${window.location.origin}/f/${form.shareableUrl}`}
@@ -257,7 +258,8 @@ const DashboardPage = () => {
                         ⚠️ Unpublish and re-publish this form to generate a shareable link
                       </div>
                     )}
-                  </div>
+                    </div>
+             
                 )}
 
                 <div className="flex flex-wrap gap-2">

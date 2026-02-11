@@ -13,6 +13,7 @@ export function useFormLoader(formId?: string) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [purpose, setPurpose] = useState("");
+  const [preventDuplicates, setPreventDuplicates] = useState(false);
   const [fields, setFields] = useState<Field[]>([]);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
 
@@ -35,7 +36,7 @@ export function useFormLoader(formId?: string) {
     if (title || description || purpose || fields.length > 0) {
       saveToCache();
     }
-  }, [title, description, purpose, fields]);
+  }, [title, description, purpose, preventDuplicates, fields]);
 
   const loadFromCache = () => {
     try {
@@ -45,6 +46,7 @@ export function useFormLoader(formId?: string) {
         setTitle(data.title || "");
         setDescription(data.description || "");
         setPurpose(data.purpose || "");
+        setPreventDuplicates(data.preventDuplicates || false);
         setFields(data.fields || []);
       }
     } catch (e) {
@@ -54,7 +56,7 @@ export function useFormLoader(formId?: string) {
 
   const saveToCache = () => {
     try {
-      const data = { title, description, purpose, fields };
+      const data = { title, description, purpose, preventDuplicates, fields };
       localStorage.setItem(cacheKey, JSON.stringify(data));
     } catch (e) {
       console.error("Failed to save to cache:", e);
@@ -78,6 +80,7 @@ export function useFormLoader(formId?: string) {
       setTitle(form.title);
       setDescription(form.description || "");
       setPurpose(form.purpose || "");
+      setPreventDuplicates(form.preventDuplicates || false);
       setFields(form.fields || []);
     } catch (e: any) {
       setError(e.response?.data?.message || "Failed to load form");
@@ -133,6 +136,7 @@ export function useFormLoader(formId?: string) {
         title,
         description,
         purpose,
+        preventDuplicates,
         fields: fields.map((f, i) => ({ ...f, order: i })),
       };
 
@@ -161,6 +165,7 @@ export function useFormLoader(formId?: string) {
     title,
     description,
     purpose,
+    preventDuplicates,
     fields,
     selectedFieldId,
     isLoading,
@@ -170,6 +175,7 @@ export function useFormLoader(formId?: string) {
     setTitle,
     setDescription,
     setPurpose,
+    setPreventDuplicates,
     setFields,
     setSelectedFieldId,
 

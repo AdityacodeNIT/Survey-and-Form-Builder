@@ -21,6 +21,7 @@ export default function FormBuilderPage() {
     title, setTitle,
     description, setDescription,
     purpose, setPurpose,
+    preventDuplicates, setPreventDuplicates,
     fields, setFields,
     selectedFieldId, setSelectedFieldId,
     isLoading, error, success,
@@ -119,9 +120,11 @@ export default function FormBuilderPage() {
                 title={title}
                 description={description}
                 purpose={purpose}
+                preventDuplicates={preventDuplicates}
                 setTitle={setTitle}
                 setDescription={setDescription}
                 setPurpose={setPurpose}
+                setPreventDuplicates={setPreventDuplicates}
                 onGenerateAI={getAISuggestions}
                 isLoadingAI={isLoadingAI}
               />

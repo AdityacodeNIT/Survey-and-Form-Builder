@@ -2,17 +2,19 @@ interface Props {
   title: string;
   description: string;
   purpose: string;
+  preventDuplicates: boolean;
   setTitle: (v: string) => void;
   setDescription: (v: string) => void;
   setPurpose: (v: string) => void;
+  setPreventDuplicates: (v: boolean) => void;
   onGenerateAI: () => void;
   isLoadingAI: boolean;
 }
 
 export default function FormDetails(props: Props) {
   const {
-    title, description, purpose,
-    setTitle, setDescription, setPurpose,
+    title, description, purpose, preventDuplicates,
+    setTitle, setDescription, setPurpose, setPreventDuplicates,
     onGenerateAI, isLoadingAI
   } = props;
 
@@ -52,9 +54,30 @@ export default function FormDetails(props: Props) {
         />
       </div>
 
+      {/* Prevent Duplicates Toggle */}
+      <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg p-4 border border-blue-200">
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            id="preventDuplicates"
+            checked={preventDuplicates}
+            onChange={e => setPreventDuplicates(e.target.checked)}
+            className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+          />
+          <div className="flex-1">
+            <label htmlFor="preventDuplicates" className="block text-sm font-semibold text-gray-900 cursor-pointer">
+              Prevent Duplicate Submissions by Email
+            </label>
+            <p className="text-xs text-gray-600 mt-1">
+              When enabled, each email address can only submit this form once. This requires at least one email field in your form.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg p-4 border border-slate-200">
         <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-          <span className="text-lg">✨</span>
+         
           AI Purpose (Optional)
         </label>
         <input
@@ -89,3 +112,4 @@ export default function FormDetails(props: Props) {
     </div>
   );
 }
+

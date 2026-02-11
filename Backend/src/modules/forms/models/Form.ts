@@ -2,7 +2,7 @@ import { Schema, model, Document, Types } from 'mongoose';
 
 export interface IField {
   id: string;
-  type: 'text' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'date' | 'rating' | 'file';
+  type: 'text' | 'email' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'date' | 'rating' | 'file';
   label: string;
   placeholder?: string;
   required: boolean;
@@ -22,6 +22,7 @@ export interface IForm extends Document {
   fields: IField[];
   publishStatus: 'draft' | 'published';
   shareableUrl?: string;
+  preventDuplicates?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,7 +35,7 @@ const FieldSchema = new Schema<IField>(
     },
     type: {
       type: String,
-      enum: ['text', 'textarea', 'select', 'radio', 'checkbox', 'date', 'rating', 'file'],
+      enum: ['text', 'email', 'textarea', 'select', 'radio', 'checkbox', 'date', 'rating', 'file'],
       required: true,
     },
     label: {
@@ -110,6 +111,10 @@ const FormSchema = new Schema<IForm>(
       type: String,
       unique: true,
       sparse: true,
+    },
+    preventDuplicates: {
+      type: Boolean,
+      default: false,
     },
   },
   {

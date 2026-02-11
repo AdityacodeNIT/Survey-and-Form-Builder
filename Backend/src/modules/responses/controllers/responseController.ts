@@ -26,6 +26,28 @@ export const submitResponse = asyncHandler(async (req: Request, res: ExpressResp
     throw new ApiError(403, 'This form is not accepting responses');
   }
 
+  // Check for duplicate submissions if preventDuplicates is enabled
+  if (form.preventDuplicates) {
+    // Find email field
+    const emailField = form.fields.find(f => f.type === 'email');
+    
+    if (emailField) {
+      const emailValue = responseData[emailField.id];
+      
+      if (emailValue) {
+        // Check if this email has already submitted
+        const existingResponse = await Response.findOne({
+          formId: id,
+          [`responseData.${emailField.id}`]: emailValue
+        });
+
+        if (existingResponse) {
+          throw new ApiError(409, 'You have already submitted this form. Duplicate submissions are not allowed.');
+        }
+      }
+    }
+  }
+
   // Validate required fields
   const missingFields: string[] = [];
   

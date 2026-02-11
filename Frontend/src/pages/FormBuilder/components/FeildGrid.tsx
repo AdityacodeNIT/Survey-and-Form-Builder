@@ -15,7 +15,7 @@ interface Props {
 
 export default function FieldGrid({ fields, selectedFieldId, setSelectedFieldId, removeField, setFields }: Props) {
   const gridRef = useRef<HTMLDivElement>(null);
-  const [gridWidth, setGridWidth] = useState(0);
+  const [gridWidth, setGridWidth] = useState(1200); // Set default width
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   useEffect(() => {
@@ -25,11 +25,29 @@ export default function FieldGrid({ fields, selectedFieldId, setSelectedFieldId,
       }
     };
 
+    // Update immediately
     updateWidth();
+    
+    // Also update after a short delay to ensure DOM is ready
+    const timer = setTimeout(updateWidth, 100);
+    
     window.addEventListener("resize", updateWidth);
 
-    return () => window.removeEventListener("resize", updateWidth);
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+      clearTimeout(timer);
+    };
   }, []);
+
+  // Recalculate width when fields change
+  useEffect(() => {
+    if (gridRef.current && fields.length > 0) {
+      const timer = setTimeout(() => {
+        setGridWidth(gridRef.current!.offsetWidth);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [fields.length]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();

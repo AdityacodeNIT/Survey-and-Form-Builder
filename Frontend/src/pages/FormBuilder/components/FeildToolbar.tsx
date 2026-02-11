@@ -49,12 +49,9 @@ export default function FieldToolbar({ onAddField, fields }: Props) {
       </div>
 
       {fields.length === 0 && (
-        <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg bg-slate-50">
-          <svg className="w-16 h-16 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+        <div className="text-center py-4 border-2 border-dashed border-gray-200 rounded-lg bg-blue-100 text-black">
+  
           <p className="text-gray-500 font-medium">No fields added yet</p>
-          <p className="text-sm text-gray-400 mt-1">Drag a field type here or click to add</p>
         </div>
       )}
     </div>

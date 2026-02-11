@@ -36,6 +36,7 @@ export interface Form {
   fields: Field[];
   shareableUrl?: string;
   publishStatus?: 'draft' | 'published';
+  preventDuplicates?: boolean;
   createdAt: string;
   updatedAt?: string;
   userId?: string;

@@ -9,6 +9,7 @@ const DashboardPage = () => {
   const [forms, setForms] = useState<Form[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -100,6 +101,18 @@ const DashboardPage = () => {
     });
   };
 
+  const toggleDescription = (formId: string) => {
+    setExpandedDescriptions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(formId)) {
+        newSet.delete(formId);
+      } else {
+        newSet.add(formId);
+      }
+      return newSet;
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -164,14 +177,14 @@ const DashboardPage = () => {
             </button>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
             {forms.map((form) => (
-              <div key={form._id} className="card hover:shadow-lg transition-shadow">
+              <div key={form._id} className="card hover:shadow-lg transition-shadow w-full max-w-full overflow-hidden p-2 ">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{form.title}</h3>
+                    <h3 className="md:text-lg text-md font-semibold text-gray-900 mb-1">{form.title}</h3>
                     {form.description && (
-                      <p className="text-sm text-gray-600 line-clamp-2">{form.description}</p>
+                      <p className="md:text-sm  text-xs text-gray-600 line-clamp-2">{form.description}</p>
                     )}
                   </div>
                   <span
@@ -207,7 +220,7 @@ const DashboardPage = () => {
                             className="text-slate-600 hover:text-slate-700"
                             title="Copy link"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-3 w-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                             </svg>
                           </button>
@@ -216,7 +229,7 @@ const DashboardPage = () => {
                           onClick={() => window.open(`/f/${form.shareableUrl}`, '_blank')}
                           className="w-full px-3 py-2 bg-slate-600 text-white text-sm rounded hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                           Open Form

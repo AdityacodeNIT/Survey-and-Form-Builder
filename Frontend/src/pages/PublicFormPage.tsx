@@ -102,15 +102,23 @@ const PublicFormPage = () => {
   const validateForm = () => {
     if (!form) return false;
     const errors: Record<string, string> = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     for (const field of form.fields) {
       const v = formData[field.id];
+      
+      // Check required fields
       if (field.required) {
         if (field.type === 'checkbox' && (!Array.isArray(v) || v.length === 0)) {
           errors[field.id] = 'Required';
         } else if (!v) {
           errors[field.id] = 'Required';
         }
+      }
+      
+      // Validate email format
+      if (field.type === 'email' && v && !emailRegex.test(v)) {
+        errors[field.id] = 'Invalid email address';
       }
     }
 
@@ -184,6 +192,16 @@ const PublicFormPage = () => {
             className={inputBase}
             value={value}
             placeholder="Your answer"
+            onChange={(e) => handleFieldChange(field.id, e.target.value)}
+          />
+        )}
+
+        {field.type === 'email' && (
+          <input
+            type="email"
+            className={inputBase}
+            value={value}
+            placeholder="your@email.com"
             onChange={(e) => handleFieldChange(field.id, e.target.value)}
           />
         )}

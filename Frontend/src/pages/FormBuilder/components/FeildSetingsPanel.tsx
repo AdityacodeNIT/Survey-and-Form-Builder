@@ -69,6 +69,7 @@ export default function FieldSettingsPanel({ field, updateField }: Props) {
           }}
         >
           <option value="text">Text</option>
+          <option value="email">Email</option>
           <option value="textarea">Textarea</option>
           <option value="select">Select (Dropdown)</option>
           <option value="radio">Radio Buttons</option>

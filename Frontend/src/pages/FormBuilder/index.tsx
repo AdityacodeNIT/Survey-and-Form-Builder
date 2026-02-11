@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import HeaderBar from "./components/HeadBar";
@@ -59,6 +60,19 @@ export default function FormBuilderPage() {
       }
     }, 100);
   };
+
+  // Listen for drop events from FieldGrid
+  useEffect(() => {
+    const handleAddFieldFromDrop = (e: any) => {
+      const fieldType = e.detail.fieldType;
+      if (fieldType) {
+        addField(fieldType as FieldType);
+      }
+    };
+
+    window.addEventListener('addFieldFromDrop', handleAddFieldFromDrop);
+    return () => window.removeEventListener('addFieldFromDrop', handleAddFieldFromDrop);
+  }, [fields]);
 
   const updateField = (id: string, updates: Partial<Field>) => {
     setFields(fields.map(f => (f.id === id ? { ...f, ...updates } : f)));

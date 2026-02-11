@@ -6,6 +6,7 @@ export interface User {
 
 export type FieldType = 
   | 'text' 
+  | 'email'
   | 'textarea' 
   | 'select' 
   | 'radio' 

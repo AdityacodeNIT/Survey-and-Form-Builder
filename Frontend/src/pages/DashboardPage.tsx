@@ -184,7 +184,24 @@ const DashboardPage = () => {
                   <div className="flex-1">
                     <h3 className="md:text-lg text-md font-semibold text-gray-900 mb-1">{form.title}</h3>
                     {form.description && (
-                      <p className="md:text-sm  text-xs text-gray-600 line-clamp-2">{form.description}</p>
+                      <div>
+                        <p className={`md:text-sm text-xs text-gray-600 break-words ${
+                          expandedDescriptions.has(form._id) ? '' : 'line-clamp-2'
+                        }`}>
+                          {form.description}
+                        </p>
+                        {form.description.length > 100 && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleDescription(form._id);
+                            }}
+                            className="text-xs text-slate-600 hover:text-slate-800 font-medium mt-1"
+                          >
+                            {expandedDescriptions.has(form._id) ? 'Show less' : 'Show more'}
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                   <span
